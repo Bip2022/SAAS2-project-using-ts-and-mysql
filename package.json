@@ -4,14 +4,15 @@
   "description": "",
   "license": "ISC",
   "author": "bipin",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "ts-node server.ts"
   },
   "dependencies": {
     "dotenv": "^16.5.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mysql2": "^3.14.1",
+    "sequelize-typescript": "^2.1.6"
   },
   "devDependencies": {
     "@types/express": "^5.0.2",

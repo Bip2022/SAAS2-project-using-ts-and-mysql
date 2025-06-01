@@ -1,6 +1,9 @@
-import app from './src/app.ts'
-import { envConfig } from './src/config/config.ts';
+import app from './src/app'
+import { envConfig } from './src/config/config';
 
+
+//database connection import 
+import './src/database/connection';
 
 function startServer() {
   const PORT = envConfig.portNumber;
