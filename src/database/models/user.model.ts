@@ -16,7 +16,8 @@ import { Table,Column,Model,DataType, PrimaryKey } from 'sequelize-typescript';
     declare id: string;
 
     @Column({
-      type: DataType.STRING,
+      type: DataType.STRING
+ 
     })
     declare username: string;
 
@@ -27,6 +28,7 @@ import { Table,Column,Model,DataType, PrimaryKey } from 'sequelize-typescript';
 
     @Column({
       type: DataType.STRING,
+      unique: true
     })
     declare email: string;
 

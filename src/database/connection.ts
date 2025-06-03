@@ -20,7 +20,7 @@ sequelize.authenticate()
 
 
   //migration garney process
-  sequelize.sync({ force: true }) 
+  sequelize.sync({ alter: true }) 
   .then(() => {
     console.log("Database synchronized successfully");
   })
