@@ -28,7 +28,9 @@ import { Table,Column,Model,DataType, PrimaryKey } from 'sequelize-typescript';
 
     @Column({
       type: DataType.STRING,
-      unique: true
+     
+      
+      
     })
     declare email: string;
 

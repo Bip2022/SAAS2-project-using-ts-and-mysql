@@ -1,14 +1,9 @@
-import express, { Router, Request, Response } from "express";
+import { Router } from "express";
 import AuthController from "../../../controller/globals/auth/auth.controller";
 
-const router: Router = express.Router();
+const router = Router();
 
-router.post('/register', async (req: Request, res: Response) => {
-  try {
-    await AuthController.registerUser(req, res);
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error", error });
-  }
-});
+router.route('/register').post(AuthController.registerUser);
+router.route('/login').post(AuthController.loginUser);
 
 export default router;
