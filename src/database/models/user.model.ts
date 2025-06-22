@@ -28,7 +28,7 @@ import { Table,Column,Model,DataType, PrimaryKey } from 'sequelize-typescript';
 
     @Column({
       type: DataType.STRING,
-     
+      unique: true,
       
       
     })
@@ -40,6 +40,11 @@ import { Table,Column,Model,DataType, PrimaryKey } from 'sequelize-typescript';
 
     })
     declare role: 'teacher' | 'institute' | 'student'| 'super-admin';
+ 
+    @Column({
+       type: DataType.STRING,
+    })
+ declare currentInstituteNumber : string | null;
   }
 
   export default User;

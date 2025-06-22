@@ -21,13 +21,18 @@ sequelize.authenticate()
   });
 
 
+
+
   //migration garney process
-  sequelize.sync({ alter: true }) 
+  sequelize.sync({ alter:  false }) // alter: true le table ko structure change garna sakcha, naya column add garna sakcha, tara data lai khalkho garna sakdaina
   .then(() => {
     console.log("Database synchronized successfully");
   })
   .catch((error) => {
     console.error("Error synchronizing the database:", error);
   }) ;
+  
 export default sequelize;
+
+
 

@@ -1,24 +1,19 @@
-import { NextFunction, Request, Response } from 'express';
+import { ExtendRequest } from '../middleware/type';
+import { NextFunction,  Response } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../database/models/user.model';
 
 
-interface ExtendRequest extends Request {
-user ?: {
-  username: string | null,
-  email: string,
-  role: string
-}
- }; 
 
 
 
 
 class Middlware {
-  static isLoggedIn(req: ExtendRequest, res: Response, next: NextFunction){
+  static isLoggedIn(req: ExtendRequest , res: Response, next: NextFunction){
     //check if login or not
     //token accept
    
+  
     const token = req.headers.authorization//jwt token
 
     console.log(token, "token");
@@ -64,4 +59,4 @@ class Middlware {
 }
 
 
-export default Middlware; 
+export default Middlware;  
