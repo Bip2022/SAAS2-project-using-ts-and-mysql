@@ -19,5 +19,22 @@ const storage = new CloudinaryStorage({
 )
 })
 
-const upload = multer({ storage });
+
+const fileFilter = (req:Request , file:Express.Multer.File , cb:multer.FileFilterCallback)=>{
+  const allowedFileTypes = ['image/png' , 'image/jpeg', 'image/jpg']
+  if(allowedFileTypes.includes(file.mimetype)){
+    cb(null,true)
+  }else{
+    cb(new Error("Only image files are supported!!"))
+  }
+  } 
+ 
+  // Multer middleware with limits
+const upload = multer({ 
+  storage,
+   limits :{
+    fileSize : 4 * 1024 * 1024
+  },
+
+ });
 export default upload

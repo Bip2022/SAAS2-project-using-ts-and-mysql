@@ -3,11 +3,12 @@ import sequelize from "../../database/connection";
 import generateRandomInstituteNumber from "../../services/generateRandomNumber";
 import { ExtendRequest } from "../../middleware/type";
 import User from "../../database/models/user.model";
+import categories from "../../seed";
 
 
 
 class InstituteController {
-  static  async createInstitute(req: ExtendRequest, res: Response, next: NextFunction) {
+  static async createInstitute(req: ExtendRequest, res: Response, next: NextFunction) {
     console.log(req.user)
 
     const { instituteName, instituteAddress, instituteEmail, institutePhoneNumber } = req.body;
@@ -69,19 +70,19 @@ class InstituteController {
         }
       })
     }
-    
 
-req.currentInstituteNumber = instituteNumber; // Set the instituteNumber in the request 
-next()
+
+    req.currentInstituteNumber = instituteNumber; // Set the instituteNumber in the request 
+    next()
   }
-   catch(error: any) {
+  catch(error: any) {
     console.log(error)
   }
 
-  static async createTeacherTable  (req: ExtendRequest, res: Response, next:NextFunction) {
-    try{
-    const instituteNumber = req.currentInstituteNumber;
-    await sequelize.query(`
+  static async createTeacherTable(req: ExtendRequest, res: Response, next: NextFunction) {
+    try {
+      const instituteNumber = req.currentInstituteNumber;
+      await sequelize.query(`
       CREATE TABLE IF NOT EXISTS teacher_${instituteNumber}(
         id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
         teacherName VARCHAR(255) NOT NULL,
@@ -94,19 +95,19 @@ next()
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       );
     `);
-    next()
-    }catch(error){
-      console.log(error,"Error")
-      res.status(500).json({message:error})
+      next()
+    } catch (error) {
+      console.log(error, "Error")
+      res.status(500).json({ message: error })
 
     }
   }
 
-  static  async createStudentTable  (req: ExtendRequest, res: Response, next:NextFunction){
+  static async createStudentTable(req: ExtendRequest, res: Response, next: NextFunction) {
 
-    try{
-        const instituteNumber = req.currentInstituteNumber;
-    await sequelize.query(`
+    try {
+      const instituteNumber = req.currentInstituteNumber;
+      await sequelize.query(`
       CREATE TABLE IF NOT EXISTS student_${instituteNumber}(
         id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
         studentName VARCHAR(255) NOT NULL,
@@ -120,18 +121,18 @@ next()
       );
     `);
 
-next()
-    }catch(error){
-      console.log(error,"Error")
-      res.status(500).json({message:error})
+      next()
+    } catch (error) {
+      console.log(error, "Error")
+      res.status(500).json({ message: error })
 
     }
-    }
-  
+  }
 
 
 
-  static async createCourseTable (req: ExtendRequest, res: Response)  {
+
+  static async createCourseTable(req: ExtendRequest, res: Response) {
     const instituteNumber = req.currentInstituteNumber;
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS course_${instituteNumber}(
@@ -148,9 +149,31 @@ next()
     `);
     res.status(200).json({
       message: "Institutee created successfully👌🏻👌",
-     instituteNumber,
+      instituteNumber,
     })
   }
+  
+  static async createCategoryTable(req: ExtendRequest, res: Response, next:NextFunction) {
+    const instituteNumber = req.currentInstituteNumber;
+    await sequelize.query(`
+      CREATE TABLE IF NOT EXISTS category_${instituteNumber}(
+       id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        categoryName VARCHAR(255) NOT NULL UNIQUE,
+        categoryDescription TEXT,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )`)
+     categories.forEach (async function(categories){
+      await sequelize.query(`INSERT INTO category_${instituteNumber}(categoryName,categoryDescription) VALUES(?,?)`,{
+        replacements : [categories.categoryName, categories.categoryDescription] //data sedding
+      })
+
+     })
+      
+next()
+
+    }
+
 }
 export default InstituteController;
 

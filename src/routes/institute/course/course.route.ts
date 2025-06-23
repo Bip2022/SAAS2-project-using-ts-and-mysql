@@ -1,9 +1,11 @@
-import { AsyncHandler } from './../../services/asyncErrorHandler';
+import { AsyncHandler } from './../../../services/asyncErrorHandler'
 import express, { Router } from 'express';
-import Middleware from '../../middleware/middleware';
-import CourseController from '../../controller/institute/course/course.controller';
+import Middleware from '../../.././middleware/middleware';
+
 // import {upload} from './../../middleware/multer.mmiddlerware'//local multerset
-import upload from './../../services/cloudinaryConfig' //cloud setup
+ //cloud setup
+import CourseController from '../../../controller/institute/course/course.controller';
+import { upload } from '../../../middleware/multer.mmiddlerware';
 const router: Router = express.Router();
 
 // POST for creating course & GET for all courses
@@ -14,7 +16,7 @@ router.route('/')
     AsyncHandler.ErrorHandler(CourseController.createCourse)
   )
   .get(
-    AsyncHandler.ErrorHandler(CourseController.getAllCourse)
+  Middleware.isLoggedIn,AsyncHandler.ErrorHandler(CourseController.getAllCourse)
   );
 
 // GET single course by id & DELETE course

@@ -8,9 +8,10 @@ const router: Router = express.Router();
 router.route('/')
   .post(
     Middleware.isLoggedIn,
-    AsyncHandler.ErrorHandler(InstituteController.createInstitute),
-    AsyncHandler.ErrorHandler(InstituteController.createTeacherTable),
-    AsyncHandler.ErrorHandler(InstituteController.createStudentTable),
+   InstituteController.createInstitute,
+   InstituteController.createTeacherTable,
+    InstituteController.createStudentTable,
+   InstituteController.createCategoryTable,
     AsyncHandler.ErrorHandler(InstituteController.createCourseTable)
   );
 
