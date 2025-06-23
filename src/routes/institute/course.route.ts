@@ -2,8 +2,8 @@ import { AsyncHandler } from './../../services/asyncErrorHandler';
 import express, { Router } from 'express';
 import Middleware from '../../middleware/middleware';
 import CourseController from '../../controller/institute/course/course.controller';
-import {upload} from './../../middleware/multer.mmiddlerware'//local multerset
-
+// import {upload} from './../../middleware/multer.mmiddlerware'//local multerset
+import upload from './../../services/cloudinaryConfig' //cloud setup
 const router: Router = express.Router();
 
 // POST for creating course & GET for all courses

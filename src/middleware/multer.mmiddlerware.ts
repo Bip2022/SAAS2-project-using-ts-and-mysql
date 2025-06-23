@@ -16,4 +16,4 @@ const storage = multer.diskStorage({
 })
 // multer instance बनाउने
 const upload = multer({ storage });
-export {upload};
+export {upload}; //yesto hudaa import gardaa ni curley base mai garnu parxa

@@ -1,4 +1,3 @@
-
 import { NextFunction, Response } from "express";
 import sequelize from "../../database/connection";
 import generateRandomInstituteNumber from "../../services/generateRandomNumber";
@@ -24,7 +23,7 @@ class InstituteController {
     const instituteNumber = generateRandomInstituteNumber()  //institute(name) 
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS institute_${instituteNumber}(
-      id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      id VARCHAR(36)  PRIMARY KEY DEFAULT (UUID()),
       instituteName VARCHAR(255) NOT NULL,
       instituteAddress VARCHAR(255) NOT NULL,
       instituteEmail VARCHAR(255) NOT NULL,
@@ -70,22 +69,21 @@ class InstituteController {
         }
       })
     }
+    
 
 req.currentInstituteNumber = instituteNumber; // Set the instituteNumber in the request 
-
-    next()
-  } catch(error: any) {
+next()
+  }
+   catch(error: any) {
     console.log(error)
   }
-}
 
-class TeacherController {
-  static createTeacherTable = async (req: ExtendRequest, res: Response, next:NextFunction) => {
+  static async createTeacherTable  (req: ExtendRequest, res: Response, next:NextFunction) {
     try{
     const instituteNumber = req.currentInstituteNumber;
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS teacher_${instituteNumber}(
-        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
         teacherName VARCHAR(255) NOT NULL,
         teacherEmail VARCHAR(255) NOT NULL,
         teacherPhoneNumber VARCHAR(50) NOT NULL,
@@ -96,23 +94,21 @@ class TeacherController {
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       );
     `);
-  next();
+    next()
     }catch(error){
       console.log(error,"Error")
       res.status(500).json({message:error})
 
     }
   }
-}
 
-class StudentController {
-  static createStudentTable = async (req: ExtendRequest, res: Response, next:NextFunction) => {
+  static  async createStudentTable  (req: ExtendRequest, res: Response, next:NextFunction){
 
     try{
         const instituteNumber = req.currentInstituteNumber;
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS student_${instituteNumber}(
-        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
         studentName VARCHAR(255) NOT NULL,
         studentEmail VARCHAR(255) NOT NULL,         
         studentPhoneNumber VARCHAR(50) NOT NULL,
@@ -123,26 +119,27 @@ class StudentController {
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       );
     `);
-    next();
 
+next()
     }catch(error){
       console.log(error,"Error")
       res.status(500).json({message:error})
 
     }
+    }
   
-  }
-}
 
-class  CourseController{
-  static createCourseTable = async (req: ExtendRequest, res: Response) => {
+
+
+  static async createCourseTable (req: ExtendRequest, res: Response)  {
     const instituteNumber = req.currentInstituteNumber;
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS course_${instituteNumber}(
-        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
         courseName VARCHAR(255) NOT NULL UNIQUE,
         courseDescription TEXT,
         courseDuration VARCHAR(50) NOT NULL,
+        courseLevel ENUM ('beginner', 'intermediate', 'advance') NOT NULL,
         courseFee VARCHAR(255) NOT NULL,
         courseThumbnail VARCHAR(200),
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -153,15 +150,9 @@ class  CourseController{
       message: "Institutee created successfully👌🏻👌",
      instituteNumber,
     })
- }
+  }
 }
-
- 
-
-
-
-
-export {InstituteController, TeacherController,StudentController,CourseController};
+export default InstituteController;
 
 
 

@@ -6,15 +6,17 @@ class CourseController {
   static async createCourse(req: ExtendRequest, res: Response) {
     const instituteNumber = req.currentInstituteNumber;
 
-    const { courseName, courseDescription, courseDuration, courseFee} = req.body;
+    const { courseName, courseDescription, courseDuration, courseFee,courseLevel} = req.body;
 
-    if (!courseName || !courseDescription || !courseDuration || !courseFee ) { 
+    if (!courseName || !courseDescription || !courseDuration || !courseFee || !courseLevel ) { 
       return res.status(400).json({
         message: "Please provide all fields!!"
       });
     }
-  // console.log(req.file,"FILE")
-   const courseThumbNail = req.file ? req.file.filename  : null  
+  console.log(req.file,"FILE")
+  //  const courseThumbNail = req.file ? req.file.filename  : null  //locally
+   const courseThumbNail = req.file ? req.file.path  : null //cloudinary or in cloud
+   console.log(courseThumbNail,"courseThumbNail")
 
 
    const returnData = await sequelize.query(`INSERT INTO course_${instituteNumber} (courseName, courseDescription, courseDuration, courseFee, courseThumbnail) VALUES (?, ?, ?, ?, ?)`, {

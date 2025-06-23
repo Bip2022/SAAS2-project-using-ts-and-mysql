@@ -1,5 +1,5 @@
 import { ExtendRequest } from '../middleware/type';
-import { NextFunction,  Response } from 'express';
+import { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../database/models/user.model';
 
@@ -9,11 +9,11 @@ import User from '../database/models/user.model';
 
 
 class Middlware {
-  static async isLoggedIn(req: ExtendRequest , res: Response, next: NextFunction){
+  static async isLoggedIn(req: ExtendRequest, res: Response, next: NextFunction) {
     //check if login or not
     //token accept
-   
-  
+
+
     const token = req.headers.authorization//jwt token
 
     console.log(token, "token");
@@ -22,7 +22,7 @@ class Middlware {
       return;
     }
     //verify token
-    jwt.verify(token, 'dvsghvhdsghgdfhdsvh', async(error, result : any) => {
+    jwt.verify(token, 'dvsghvhdsghgdfhdsvh', async (error, result: any) => {
       if (error) {
         res.status(403).json({ message: "Invalid token!" });
         return;
@@ -30,13 +30,13 @@ class Middlware {
       //if token is valid, attach user to request
       console.log(result, "result");
 
-//one way to get result
+      //one way to get result
       // const userData = await User.findAll({
       //   where: {
       //     id: result.id
       //   }
       // })
-    
+
       // if(userData.length === 0) {
       //   res.status(403).json({ message: "User not found with requiremwnt!!" });
       //   return;
@@ -44,19 +44,25 @@ class Middlware {
       // console.log("User veified successfully");
 
       //another way to get result
-     const userData = await User.findByPk(result.id,{
-      attributes : ['id' ,'currentInstituteNumber']
-     })
-     
-     if (!userData) {
-     res.status(403).json({ message: "User not found with requirement!" });
-     return;
-}
+      const userData = await User.findByPk(result.id, {
+        attributes: ['id', 'currentInstituteNumber']
+      })
 
-// userData found, continue your logic here
-  // ✅ Set the institute number to request object
+      if (!userData) {
+        res.status(403).json({ message: "User not found with requirement!" });
+        return;
+      }
+      console.log("userData: ", userData);
+      req.user = {
+        id: result.id
+      }
+      // userData found, continue your logic here
+      // ✅ Set the institute number to request object
+
+
+      // req.currentInstituteNumber मा institute number राख्ने, null भए fallback
       req.currentInstituteNumber = userData.currentInstituteNumber;
-  next();     
+       return next();
     }
     )
   }
