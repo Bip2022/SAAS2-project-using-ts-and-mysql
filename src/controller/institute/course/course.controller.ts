@@ -13,7 +13,10 @@ class CourseController {
         message: "Please provide all fields!!"
       });
     }
+    
    const courseThumbNail = null  
+
+
    const returnData = await sequelize.query(`INSERT INTO course_${instituteNumber} (courseName, courseDescription, courseDuration, courseFee, courseThumbnail) VALUES (?, ?, ?, ?, ?)`, {
       replacements: [courseName, courseDescription, courseDuration, courseFee, courseThumbNail || "https://s3.amazonaws.com/images.seroundtable.com/google-amp-1454071566.jpg" ]
     });
