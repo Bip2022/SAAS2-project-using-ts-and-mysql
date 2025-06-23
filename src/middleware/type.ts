@@ -2,10 +2,8 @@ import {Request} from "express"
 
 export interface ExtendRequest extends Request {
 user ?: {
-  id : string,
-  username: string | null,
-  email: string,
-  role: string 
+  id : string
 },
 instituteNumber? : number | string | null
+currentInstituteNumber? : number | string | null 
  }; 

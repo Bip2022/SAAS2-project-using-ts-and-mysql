@@ -9,7 +9,7 @@ import User from '../database/models/user.model';
 
 
 class Middlware {
-  static isLoggedIn(req: ExtendRequest , res: Response, next: NextFunction){
+  static async isLoggedIn(req: ExtendRequest , res: Response, next: NextFunction){
     //check if login or not
     //token accept
    
@@ -44,7 +44,10 @@ class Middlware {
       // console.log("User veified successfully");
 
       //another way to get result
-     const userData = await User.findByPk(result.id);
+     const userData = await User.findByPk(result.id,{
+      attributes : ['id' ,'currentInstituteNumber']
+     })
+     
      if (!userData) {
      res.status(403).json({ message: "User not found with requirement!" });
      return;

@@ -1,3 +1,4 @@
+
 import { NextFunction, Response } from "express";
 import sequelize from "../../database/connection";
 import generateRandomInstituteNumber from "../../services/generateRandomNumber";
@@ -7,7 +8,7 @@ import User from "../../database/models/user.model";
 
 
 class InstituteController {
-  static async createInstitute(req: ExtendRequest, res: Response, next: NextFunction) {
+  static  async createInstitute(req: ExtendRequest, res: Response, next: NextFunction) {
     console.log(req.user)
 
     const { instituteName, instituteAddress, instituteEmail, institutePhoneNumber } = req.body;
@@ -80,6 +81,7 @@ req.instituteNumber = instituteNumber; // Set the instituteNumber in the request
 
 class TeacherController {
   static createTeacherTable = async (req: ExtendRequest, res: Response, next:NextFunction) => {
+    try{
     const instituteNumber = req.instituteNumber;
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS teacher_${instituteNumber}(
@@ -95,12 +97,19 @@ class TeacherController {
       );
     `);
   next();
+    }catch(error){
+      console.log(error,"Error")
+      res.status(500).json({message:error})
+
+    }
   }
 }
 
 class StudentController {
   static createStudentTable = async (req: ExtendRequest, res: Response, next:NextFunction) => {
-    const instituteNumber = req.instituteNumber;
+
+    try{
+        const instituteNumber = req.instituteNumber;
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS student_${instituteNumber}(
         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -115,6 +124,13 @@ class StudentController {
       );
     `);
     next();
+
+    }catch(error){
+      console.log(error,"Error")
+      res.status(500).json({message:error})
+
+    }
+  
   }
 }
 
@@ -128,6 +144,7 @@ class  CourseController{
         courseDescription TEXT,
         courseDuration VARCHAR(50) NOT NULL,
         courseFee VARCHAR(255) NOT NULL,
+        courseThumbnail VARCHAR(200),
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       );
@@ -135,7 +152,7 @@ class  CourseController{
     res.status(200).json({
       message: "Institutee created successfully👌🏻👌",
      instituteNumber,
-    });
+    })
  }
 }
 
