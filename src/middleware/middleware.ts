@@ -54,7 +54,8 @@ class Middlware {
 }
 
 // userData found, continue your logic here
-  req.user = userData,
+  // ✅ Set the institute number to request object
+      req.currentInstituteNumber = userData.currentInstituteNumber;
   next();     
     }
     )

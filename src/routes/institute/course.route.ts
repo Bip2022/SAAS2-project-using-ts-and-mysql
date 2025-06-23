@@ -2,13 +2,15 @@ import { AsyncHandler } from './../../services/asyncErrorHandler';
 import express, { Router } from 'express';
 import Middleware from '../../middleware/middleware';
 import CourseController from '../../controller/institute/course/course.controller';
+import {upload} from './../../middleware/multer.mmiddlerware'//local multerset
 
 const router: Router = express.Router();
 
 // POST for creating course & GET for all courses
+//filenamr --fontend/postname maa ke name bata file aairaxa file vanney kuraa ho...
 router.route('/')
   .post(
-    Middleware.isLoggedIn,
+    Middleware.isLoggedIn,upload.single('courseThumbNail'),
     AsyncHandler.ErrorHandler(CourseController.createCourse)
   )
   .get(

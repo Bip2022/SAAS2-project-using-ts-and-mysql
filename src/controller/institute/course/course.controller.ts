@@ -13,16 +13,17 @@ class CourseController {
         message: "Please provide all fields!!"
       });
     }
-    
-   const courseThumbNail = null  
+  // console.log(req.file,"FILE")
+   const courseThumbNail = req.file ? req.file.filename  : null  
 
 
    const returnData = await sequelize.query(`INSERT INTO course_${instituteNumber} (courseName, courseDescription, courseDuration, courseFee, courseThumbnail) VALUES (?, ?, ?, ?, ?)`, {
-      replacements: [courseName, courseDescription, courseDuration, courseFee, courseThumbNail || "https://s3.amazonaws.com/images.seroundtable.com/google-amp-1454071566.jpg" ]
+      replacements: [courseName, courseDescription, courseDuration, courseFee, courseThumbNail ]
     });
     console.log(returnData)
     return res.status(200).json({
-      message: "Course created successfully!"
+      message: "Course created successfully!",
+      instituteNumber
     });
   }
 
@@ -42,9 +43,9 @@ class CourseController {
      sequelize.query(`DELETE FROM course_${instituteNumber} WHERE Id =?`,{
       replacements : [courseId]
      })
-     res.sendStatus(200).json({
-      message:"course deleted successfully"
-     })
+   return res.status(200).json({
+  message: "Course deleted successfully"
+});
   }
 
   static  async getAllCourse (req: ExtendRequest, res: Response){
