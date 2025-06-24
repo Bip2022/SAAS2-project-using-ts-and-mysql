@@ -5,7 +5,7 @@ import Middleware from '../../.././middleware/middleware';
 // import {upload} from './../../middleware/multer.mmiddlerware'//local multerset
  //cloud setup
 import CourseController from '../../../controller/institute/course/course.controller';
-import { upload } from '../../../middleware/multer.mmiddlerware';
+import { upload } from '../../../middleware/multer.middlerware';
 const router: Router = express.Router();
 
 // POST for creating course & GET for all courses

@@ -1,9 +1,10 @@
 import { NextFunction, Response } from "express";
 import sequelize from "../../database/connection";
-import generateRandomInstituteNumber from "../../services/generateRandomNumber";
+import RandomNumberGenerator from "../../services/generateRandomNumber";
 import { ExtendRequest } from "../../middleware/type";
 import User from "../../database/models/user.model";
 import categories from "../../seed";
+
 
 
 
@@ -21,7 +22,7 @@ class InstituteController {
 
 
     // create  table name institute in database
-    const instituteNumber = generateRandomInstituteNumber()  //institute(name) 
+    const instituteNumber = RandomNumberGenerator.generateRandomNumber()  //institute(name) 
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS institute_${instituteNumber}(
       id VARCHAR(36)  PRIMARY KEY DEFAULT (UUID()),
@@ -84,13 +85,18 @@ class InstituteController {
       const instituteNumber = req.currentInstituteNumber;
       await sequelize.query(`
       CREATE TABLE IF NOT EXISTS teacher_${instituteNumber}(
-        id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
         teacherName VARCHAR(255) NOT NULL,
         teacherEmail VARCHAR(255) NOT NULL,
         teacherPhoneNumber VARCHAR(50) NOT NULL,
         teacherAddress VARCHAR(255) NOT NULL,
+        teacherPassword VARCHAR(255),
         teacherQualification VARCHAR(255) NOT NULL,
         teacherExperience INT NOT NULL,
+        joinedDate DATE,
+        salary VARCHAR(100),
+        teacherPhoto VARCHAR(255),
+        courseId VARCHAR (100) REFERENCES course_${instituteNumber} (id),
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       );
@@ -109,7 +115,7 @@ class InstituteController {
       const instituteNumber = req.currentInstituteNumber;
       await sequelize.query(`
       CREATE TABLE IF NOT EXISTS student_${instituteNumber}(
-        id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
         studentName VARCHAR(255) NOT NULL,
         studentEmail VARCHAR(255) NOT NULL,         
         studentPhoneNumber VARCHAR(50) NOT NULL,
@@ -136,13 +142,15 @@ class InstituteController {
     const instituteNumber = req.currentInstituteNumber;
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS course_${instituteNumber}(
-        id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
         courseName VARCHAR(255) NOT NULL UNIQUE,
         courseDescription TEXT,
         courseDuration VARCHAR(50) NOT NULL,
         courseLevel ENUM ('beginner', 'intermediate', 'advance') NOT NULL,
         courseFee VARCHAR(255) NOT NULL,
         courseThumbnail VARCHAR(200),
+        teacherId VARCHAR(36) REFERENCES teacher_${instituteNumber} (id),
+        categoryId VARCHAR(36) NOT NULL REFERENCES category_${instituteNumber} (id),
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       );
@@ -152,27 +160,27 @@ class InstituteController {
       instituteNumber,
     })
   }
-  
-  static async createCategoryTable(req: ExtendRequest, res: Response, next:NextFunction) {
+
+  static async createCategoryTable(req: ExtendRequest, res: Response, next: NextFunction) {
     const instituteNumber = req.currentInstituteNumber;
     await sequelize.query(`
       CREATE TABLE IF NOT EXISTS category_${instituteNumber}(
-       id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+       id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
         categoryName VARCHAR(255) NOT NULL UNIQUE,
         categoryDescription TEXT,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )`)
-     categories.forEach (async function(categories){
-      await sequelize.query(`INSERT INTO category_${instituteNumber}(categoryName,categoryDescription) VALUES(?,?)`,{
-        replacements : [categories.categoryName, categories.categoryDescription] //data sedding
+    categories.forEach(async function (categories) {
+      await sequelize.query(`INSERT INTO category_${instituteNumber}(categoryName,categoryDescription) VALUES(?,?)`, {
+        replacements: [categories.categoryName, categories.categoryDescription] //data sedding
       })
 
-     })
-      
-next()
+    })
 
-    }
+    next()
+
+  }
 
 }
 export default InstituteController;
