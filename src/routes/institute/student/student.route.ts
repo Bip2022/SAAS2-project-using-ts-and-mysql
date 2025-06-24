@@ -1,8 +1,9 @@
 
 
-import StudentController from '../../controller/institute/student/student.controller';
-import { AsyncHandler } from './../../services/asyncErrorHandler';
+
 import express, { Router,} from 'express';
+import StudentController from '../../../controller/institute/student/student.controller';
+import AsyncHandler from '../../../services/asyncErrorHandler';
 
 
 
